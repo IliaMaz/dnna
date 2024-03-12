@@ -1,0 +1,103 @@
+version: '3.8'
+
+secrets:
+    webcrt:
+        file: server/certs/web.crt
+    webkey:
+        file: server/certs/web.key
+
+services:
+    api:
+        container_name: api
+
+        env_file:
+            - env/.env
+
+        build:
+            target: production
+
+            dockerfile:
+                api/Dockerfile
+
+            args:
+                - API_PATH=${API_PATH}
+                - MODULES=${MODULES}
+                - TIMEZONE=${TIMEZONE}
+
+        # platform: linux/amd64
+
+        networks:
+            - db
+            - api
+
+        expose:
+            - ${API_PORT}
+
+        depends_on:
+            - postgres
+
+        restart: unless-stopped
+
+    postgres:
+        image: postgres:16.2
+
+        networks:
+            - db
+
+        container_name: ${DB_HOST}
+
+        env_file:
+            - env/.env
+
+        # platform: linux/amd64
+
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASS}
+            POSTGRES_DB: ${DB_NAME}
+            PG_DATA: /var/lib/postgresql/data
+
+        restart: unless-stopped
+
+        expose:
+            - ${DB_PORT}
+
+        volumes:
+            - data:/var/lib/postgresql/data
+
+    web:
+        env_file:
+            - env/.env
+
+        build:
+            target: production
+
+            dockerfile: server/Dockerfile
+
+            args:
+                - API_PORT=${API_PORT}
+
+        # platform: linux/amd64
+
+        secrets:
+            - webcrt
+            - webkey
+
+        depends_on:
+            - api
+
+        networks:
+            - api
+
+        container_name: web
+
+        ports:
+            - 80:80
+            - 443:443
+
+networks:
+    db:
+    api:
+
+volumes:
+    data:

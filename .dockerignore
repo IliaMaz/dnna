@@ -1,0 +1,15 @@
+# Docker files
+.dockerignore
+
+Dockerfile
+
+docker-compose.*.yml
+
+# Node files
+npm-debug.log
+
+**/node_modules
+
+# Build files
+**/dist
+

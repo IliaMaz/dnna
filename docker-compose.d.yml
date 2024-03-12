@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+    api:
+        container_name: api
+
+        env_file:
+            - env/.env.dev
+
+        build:
+            target: development
+
+            dockerfile:
+                api/Dockerfile
+
+            args:
+                - API_PATH=${API_PATH}
+                - MODULES=${MODULES}
+
+        command: npm run start:dev
+
+        volumes:
+            - ./api:${API_PATH}
+            - ${API_PATH}/${MODULES}
+
+
+        networks:
+            - db
+            - api
+
+        expose:
+            - ${API_PORT}
+
+        depends_on:
+            - postgres
+
+        restart: unless-stopped
+
+    postgres:
+        image: postgres:16.2
+
+        env_file:
+            - env/.env.dev
+
+        networks:
+            - db
+
+        container_name: ${DB_HOST}
+
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASS}
+            POSTGRES_DB: ${DB_NAME}
+            PG_DATA: /var/lib/postgresql/data
+
+        restart: unless-stopped
+
+        expose:
+            - ${DB_PORT}
+
+        volumes:
+            - data:/var/lib/postgresql/data
+
+    web:
+        env_file:
+            - env/.env.dev
+
+        build:
+            target: development
+
+            dockerfile: server/Dockerfile
+
+            args:
+                - API_PORT=${API_PORT}
+
+        depends_on:
+            - api
+
+        networks:
+            - api
+
+        container_name: web
+
+        ports:
+            - 80:80
+
+networks:
+    db:
+    api:
+
+volumes:
+    data:
