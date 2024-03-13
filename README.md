@@ -143,3 +143,13 @@
 ### Future
 
 -   All future contributions will be done via a new branch -> PR -> merge to master.
+
+### S.O.L.I.D
+
+-   This repo also contains various implementations of SOLID for my reference, they
+    have picked up from CoderOne's [video](https://www.youtube.com/watch?v=vE74gnv4VlY&ab_channel=CoderOne)
+    and extended / modified.
+
+-   Examples of the principles:
+    -   The `resources/{order,email}` contain docs on SRP (Single Responsibility
+        Principle) and LSP (Liskov Substitution Principle)
