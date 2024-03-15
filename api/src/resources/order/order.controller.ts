@@ -1,12 +1,14 @@
-import { Body, Post } from '@nestjs/common'
-import { OrderService } from './order.service'
+import { Post } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { CrudController } from '../../common/crud/crud.controller'
-import { Order } from './entities/order.entity'
-import { CreateOrderDto } from './dto/create-order.dto'
-import { UpdateOrderDto } from './dto/update-order.dto'
 import { Omit } from '../../common/decorators/omit/omit.decorator'
 import { EmailService } from '../email/email.service'
-import { ConfigService } from '@nestjs/config'
+import { PaymentProvider } from '../payment/enums/payment-provider.enum'
+import { PaymentService } from '../payment/payment.service'
+import { CreateOrderDto } from './dto/create-order.dto'
+import { UpdateOrderDto } from './dto/update-order.dto'
+import { Order } from './entities/order.entity'
+import { OrderService } from './order.service'
 
 @Omit('findOne', 'remove', 'update', 'paginate')
 export class OrderController extends CrudController<
@@ -16,7 +18,8 @@ export class OrderController extends CrudController<
 >('order', OrderService) {
     constructor(
         private readonly mailer: EmailService,
-        private readonly config: ConfigService
+        private readonly config: ConfigService,
+        private readonly payment: PaymentService
     ) {
         super()
     }
@@ -24,6 +27,20 @@ export class OrderController extends CrudController<
     @Post()
     async create() {
         const order = await super.create({})
+
+        /**
+         * We don't check for the payment status because on error
+         * the payment service or gateways will throw an exception
+         * which will update the status and bubble out avoiding
+         * further execution.
+         *
+         * Check out the `payment.service.ts` for a small example of
+         * the OCP - Open/Closed Principle.
+         */
+        await this.payment.process({
+            order,
+            provider: PaymentProvider.STRIPE
+        })
 
         /**
          * SRP -- Single Responsibility Principle We don't send the
