@@ -47,15 +47,15 @@
     specific way would be too limiting and potentially may even force user
     circumvention.
 
-    Without letting the app sync and building for prod you will face 500's.
+    Without letting the app sync and building for prod you will face error 500s.
 
 ### Package JSON Scripts
 
 -   The root package JSON scripts have been setup for 2 reasons, one, it is
     faster and simpler to trigger a named command via npm than to write out
     a docker command with multiple required options. Two, for people that
-    don't fully understand docker yet it simplifies remember what needs to
-    be run and when.
+    don't fully understand docker yet it simplifies remembering what needs
+    to be run and when.
 
 ### Docker
 
@@ -91,6 +91,8 @@
 
 -   The production config server_name directive should be adjusted if you wanted
     to serve this app on the web - search for `<example>` in `default.prd.conf`.
+    You really shouldn't be serving this app as is on the web as there are many
+    points that should be covered before considering such an action.
 
 ### NestJS
 
@@ -135,14 +137,13 @@
     handling this manually.
 
 -   For a production setup you should run the frontend production build and store
-    that in a volume which is shared between the frontend and nginx which would
-    allow direct nginx to directly serve the app. This is optimal as it removes
-    any intermediary and potentially insecure servers that come prepackage for
-    development.
+    that in a volume which is shared between the frontend and nginx which would allow
+    nginx to directly serve the app. This is optimal as it removes any intermediary
+    and potentially insecure servers that come prepackaged for development.
 
-### Future
+### Contributions
 
--   All future contributions will be done via a new branch -> PR -> merge to master.
+-   All contributions will be done via a new branch -> PR -> merge to master.
 
 ### S.O.L.I.D
 

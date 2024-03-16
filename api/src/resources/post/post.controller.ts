@@ -1,9 +1,3 @@
-import { PostService } from './post.service'
-import { CreatePostDto } from './dto/create-post.dto'
-import { UpdatePostDto } from './dto/update-post.dto'
-import { CrudController } from '../../common/crud/crud.controller'
-import { Post as PostEntity } from './entities/post.entity'
-import { Omit } from '../../common/decorators/omit/omit.decorator'
 import {
     Body,
     Get,
@@ -13,7 +7,13 @@ import {
     Patch,
     Post
 } from '@nestjs/common'
+import { CrudController } from '../../common/crud/crud.controller'
+import { Omit } from '../../common/decorators/omit/omit.decorator'
 import { Identifier } from '../../common/dtos/identifier.dto'
+import { CreatePostDto } from './dto/create-post.dto'
+import { UpdatePostDto } from './dto/update-post.dto'
+import { Post as PostEntity } from './entities/post.entity'
+import { PostService } from './post.service'
 
 /**
  * We have to redeclare the methods that use templated DTOs

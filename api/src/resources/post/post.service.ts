@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common'
+import { Repository } from 'typeorm'
+import { CrudService } from '../../common/crud/crud.service'
 import { CreatePostDto } from './dto/create-post.dto'
 import { UpdatePostDto } from './dto/update-post.dto'
-import { CrudService } from '../../common/crud/crud.service'
 import { Post } from './entities/post.entity'
-import { Repository } from 'typeorm'
 
 @Injectable()
 export class PostService extends CrudService<
