@@ -151,5 +151,9 @@
     and extended / modified.
 
 -   Examples of the principles:
+
     -   The `resources/{order,email}` contain docs on SRP (Single Responsibility
         Principle) and LSP (Liskov Substitution Principle)
+
+    -   The `resources/payment` contains an example and documentation of the OCP
+        (Open Closed Principle).
